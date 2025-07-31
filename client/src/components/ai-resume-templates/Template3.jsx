@@ -32,60 +32,51 @@ const Template3 = () => {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(to right, #e1bee7, #fce4ec)" }}>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(to right, #E0F7FA, #FFFFFF)" }}>
       <Navbar />
       <div style={{ display: "flex" }}>
         <Sidebar onEnhance={handleEnhance} resumeRef={resumeRef} />
-        <div
-          style={{
-            flexGrow: 1,
-            padding: "2.5rem",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            fontFamily: "'Poppins', sans-serif",
-          }}
-        >
+        <div style={{ flexGrow: 1, padding: "3rem", display: "flex", justifyContent: "center" }}>
           <div
             ref={resumeRef}
             style={{
-              backgroundColor: "#ffffff",
-              color: "#2c3e50",
+              background: "#fff",
               width: "100%",
-              maxWidth: "65rem",
+              maxWidth: "850px",
               padding: "3rem",
-              borderRadius: "16px",
-              boxShadow: "0 15px 35px rgba(0, 0, 0, 0.2)",
-              backgroundImage: "linear-gradient(to bottom right, #f8bbd0, #e1bee7)",
+              borderRadius: "20px",
+              boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15)",
+              fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+              color: "#263238",
             }}
           >
             {/* Header */}
-            <div style={{ borderBottom: "3px dashed #8e24aa", paddingBottom: "1rem" }}>
+            <div style={{ borderBottom: "2px solid #26a69a", paddingBottom: "1rem", marginBottom: "1rem" }}>
               {editMode ? (
                 <>
                   <input
                     type="text"
                     value={localData.name}
                     onChange={(e) => handleFieldChange("name", e.target.value)}
-                    style={{ fontSize: "2.5rem", fontWeight: "bold", border: "none", backgroundColor: "#fce4ec", padding: "0.75rem", borderRadius: "8px", width: "100%" }}
+                    style={{ fontSize: "2.5rem", fontWeight: "600", border: "none", backgroundColor: "#E0F2F1", padding: "0.75rem", borderRadius: "10px", width: "100%" }}
                   />
                   <input
                     type="text"
                     value={localData.role}
                     onChange={(e) => handleFieldChange("role", e.target.value)}
-                    style={{ fontSize: "1.2rem", color: "#6a1b9a", border: "none", backgroundColor: "#fce4ec", padding: "0.75rem", borderRadius: "8px", width: "100%", marginTop: "0.5rem" }}
+                    style={{ fontSize: "1.4rem", color: "#00695c", border: "none", backgroundColor: "#E0F2F1", padding: "0.5rem", borderRadius: "10px", width: "100%", marginTop: "0.5rem" }}
                   />
                 </>
               ) : (
                 <>
-                  <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#4a148c" }}>{resumeData.name}</h1>
-                  <p style={{ fontSize: "1.2rem", color: "#6a1b9a" }}>{resumeData.role}</p>
+                  <h1 style={{ fontSize: "2.5rem", fontWeight: "600", color: "#004d40", marginBottom: "0.3rem" }}>{resumeData.name}</h1>
+                  <h3 style={{ fontSize: "1.3rem", color: "#00695c" }}>{resumeData.role}</h3>
                 </>
               )}
-              <div style={{ fontSize: "1rem", marginTop: "1rem", lineHeight: 1.8 }}>
+              <div style={{ marginTop: "0.8rem", fontSize: "1rem" }}>
                 {[
                   { field: "phone", icon: "📞" },
-                  { field: "email", icon: "✉️" },
+                  { field: "email", icon: "📧" },
                   { field: "linkedin", icon: "🔗" },
                   { field: "location", icon: "📍" },
                 ].map(({ field, icon }) => (
@@ -95,48 +86,35 @@ const Template3 = () => {
                       type="text"
                       value={localData[field]}
                       onChange={(e) => handleFieldChange(field, e.target.value)}
-                      style={{ display: "block", marginBottom: "0.5rem", padding: "0.5rem", backgroundColor: "#fce4ec", border: "1px solid #ce93d8", borderRadius: "8px", width: "100%" }}
+                      style={{ display: "block", marginBottom: "0.6rem", padding: "0.6rem", backgroundColor: "#E0F2F1", border: "1px solid #80cbc4", borderRadius: "8px", width: "100%" }}
                     />
                   ) : (
-                    <p key={field}>{icon} {resumeData[field]}</p>
+                    <p key={field} style={{ margin: "4px 0" }}>{icon} {resumeData[field]}</p>
                   )
                 ))}
               </div>
             </div>
 
-            {/* Summary */}
-            <Section title="📝 Summary" color="#8e24aa">
-              {editMode ? (
-                <textarea
-                  value={localData.summary}
-                  onChange={(e) => handleFieldChange("summary", e.target.value)}
-                  rows={4}
-                  style={{ width: "100%", marginTop: "0.5rem", padding: "0.75rem", borderRadius: "8px", border: "1px solid #ba68c8", backgroundColor: "#fce4ec" }}
-                />
-              ) : (
-                <p>{resumeData.summary}</p>
-              )}
-            </Section>
+            {/* Section Block */}
+            <ResumeSection
+              title="📝 Summary"
+              value={localData.summary}
+              onChange={(val) => handleFieldChange("summary", val)}
+              editMode={editMode}
+            />
 
-            {/* Skills */}
-            <Section title="🚀 Skills" color="#8e24aa">
-              {editMode ? (
-                <textarea
-                  value={localData.skills?.join(", ") || ""}
-                  onChange={(e) => handleFieldChange("skills", e.target.value.split(",").map(s => s.trim()))}
-                  style={{ width: "100%", marginTop: "0.5rem", padding: "0.75rem", borderRadius: "8px", border: "1px solid #ba68c8", backgroundColor: "#fce4ec" }}
-                />
-              ) : (
-                <ul style={{ marginTop: "0.5rem", paddingLeft: "1.5rem" }}>
-                  {resumeData.skills?.map((skill, idx) => <li key={idx}>{skill}</li>)}
-                </ul>
-              )}
-            </Section>
+            <ResumeSection
+              title="💡 Skills"
+              value={(localData.skills || []).join(", ")}
+              onChange={(val) => handleFieldChange("skills", val.split(",").map((s) => s.trim()))}
+              editMode={editMode}
+              listItems={resumeData.skills}
+            />
 
-            {/* Education */}
-            <Section title="🎓 Education" color="#8e24aa">
+            <div style={{ marginTop: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#00897b", borderBottom: "2px solid #4db6ac", paddingBottom: "0.3rem" }}>🎓 Education</h2>
               {resumeData.education.map((edu, idx) => (
-                <div key={idx} style={{ marginTop: "1rem" }}>
+                <div key={idx} style={{ marginTop: "1rem", backgroundColor: "#E0F2F1", padding: "1rem", borderRadius: "10px" }}>
                   {editMode ? (
                     <>
                       <input
@@ -147,7 +125,8 @@ const Template3 = () => {
                           updated[idx].degree = e.target.value;
                           handleFieldChange("education", updated);
                         }}
-                        style={{ width: "100%", marginBottom: "0.5rem", padding: "0.5rem", border: "1px solid #ce93d8", borderRadius: "8px", backgroundColor: "#fce4ec" }}
+                        placeholder="Degree"
+                        style={{ width: "100%", marginBottom: "0.5rem", padding: "0.6rem", borderRadius: "6px", border: "1px solid #4db6ac" }}
                       />
                       <input
                         type="text"
@@ -157,7 +136,8 @@ const Template3 = () => {
                           updated[idx].institution = e.target.value;
                           handleFieldChange("education", updated);
                         }}
-                        style={{ width: "100%", marginBottom: "0.5rem", padding: "0.5rem", border: "1px solid #ce93d8", borderRadius: "8px", backgroundColor: "#fce4ec" }}
+                        placeholder="Institution"
+                        style={{ width: "100%", marginBottom: "0.5rem", padding: "0.6rem", borderRadius: "6px", border: "1px solid #4db6ac" }}
                       />
                       <input
                         type="text"
@@ -167,45 +147,32 @@ const Template3 = () => {
                           updated[idx].duration = e.target.value;
                           handleFieldChange("education", updated);
                         }}
-                        style={{ width: "100%", padding: "0.5rem", border: "1px solid #ce93d8", borderRadius: "8px", backgroundColor: "#fce4ec" }}
+                        placeholder="Duration"
+                        style={{ width: "100%", padding: "0.6rem", borderRadius: "6px", border: "1px solid #4db6ac" }}
                       />
                     </>
                   ) : (
                     <>
-                      <p style={{ fontWeight: "bold", fontSize: "1.1rem" }}>{edu.degree}</p>
-                      <p>{edu.institution} ({edu.duration})</p>
+                      <p style={{ fontWeight: "600" }}>{edu.degree}</p>
+                      <p style={{ marginBottom: "0.3rem" }}>{edu.institution}</p>
+                      <p style={{ fontSize: "0.9rem", color: "#616161" }}>{edu.duration}</p>
                     </>
                   )}
                 </div>
               ))}
-            </Section>
-          </div>
+            </div>
 
-          {/* Buttons */}
-          <div style={{ marginTop: "2rem", textAlign: "center" }}>
-            {editMode ? (
-              <>
-                <button
-                  onClick={handleSave}
-                  style={{ backgroundColor: "#43a047", color: "white", padding: "0.75rem 1.5rem", borderRadius: "8px", marginRight: "1rem", border: "none", fontWeight: "bold" }}
-                >
-                  ✅ Save
-                </button>
-                <button
-                  onClick={handleCancel}
-                  style={{ backgroundColor: "#757575", color: "white", padding: "0.75rem 1.5rem", borderRadius: "8px", border: "none", fontWeight: "bold" }}
-                >
-                  ❌ Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setEditMode(true)}
-                style={{ backgroundColor: "#1e88e5", color: "white", padding: "0.75rem 1.5rem", borderRadius: "8px", border: "none", fontWeight: "bold" }}
-              >
-                ✏️ Edit
-              </button>
-            )}
+            <div style={{ marginTop: "2rem", textAlign: "center" }}>
+              {editMode ? (
+                <>
+                  <button onClick={handleSave} style={buttonStyle("#00796b")}>✅ Save</button>
+                  <button onClick={handleCancel} style={buttonStyle("#d32f2f")}>❌ Cancel</button>
+                </>
+              ) : (
+                <button onClick={() => setEditMode(true)} style={buttonStyle("#0288d1")}>✏️ Edit</button>
+              )}
+            </div>
+
           </div>
         </div>
       </div>
@@ -213,11 +180,35 @@ const Template3 = () => {
   );
 };
 
-const Section = ({ title, children, color }) => (
+const ResumeSection = ({ title, value, onChange, editMode, listItems }) => (
   <div style={{ marginTop: "2rem" }}>
-    <h2 style={{ fontSize: "1.6rem", fontWeight: "bold", color, borderBottom: `2px solid ${color}`, paddingBottom: "0.5rem" }}>{title}</h2>
-    <div style={{ marginTop: "0.5rem", color: "#333" }}>{children}</div>
+    <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#00897b", borderBottom: "2px solid #4db6ac", paddingBottom: "0.3rem" }}>{title}</h2>
+    {editMode ? (
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={4}
+        style={{ width: "100%", marginTop: "0.5rem", padding: "0.75rem", borderRadius: "8px", border: "1px solid #4db6ac", backgroundColor: "#f1f8e9" }}
+      />
+    ) : listItems ? (
+      <ul style={{ marginTop: "0.5rem", paddingLeft: "1.5rem" }}>
+        {listItems.map((item, idx) => <li key={idx}>{item}</li>)}
+      </ul>
+    ) : (
+      <p style={{ marginTop: "0.5rem" }}>{value}</p>
+    )}
   </div>
 );
+
+const buttonStyle = (bg) => ({
+  backgroundColor: bg,
+  color: "#fff",
+  padding: "0.6rem 1.2rem",
+  borderRadius: "8px",
+  border: "none",
+  margin: "0.5rem",
+  fontWeight: "bold",
+  cursor: "pointer"
+});
 
 export default Template3;
